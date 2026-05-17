@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mehmath Coding | Modern LMS Platformu</title>
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- html2pdf.js for premium PDF reports -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --bg-main: #030712;
+            --bg-sidebar: #090d16;
+            --glass-card: rgba(255, 255, 255, 0.02);
+            --glass-card-hover: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --brand-gradient: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%); /* Matematik ve Kodlama havası: İndigo & Siber Çiyan */
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dark: #475569;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Utility Styles & Glassmorphism */
+        .premium-card {
+            background: var(--glass-card);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .premium-card:hover {
+            background: var(--glass-card-hover);
+            border-color: rgba(6, 182, 212, 0.2); /* Hafif çiyan parlaması */
+        }
+
+        .btn-gradient {
+            background: var(--brand-gradient);
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.15);
+        }
+
+        .btn-gradient:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.3);
+        }
+
+        .btn-gradient:active {
+            transform: translateY(1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--glass-border);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #06b6d4;
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15);
+        }
+
+        /* Views Rules */
+        .app-view {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .app-view.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* 1. GİRİŞ EKRANI (YENİLENMİŞ MATEMATİK & KODLAMA AKSIYONLU TASARIM) */
+        #login-view {
+            height: 100vh;
+            width: 100vw;
+            align-items: center;
+            justify-content: center;
+            /* Matematik defteri / koordinat düzlemi ve kod satırlarını çağrıştıran ince premium arka plan ızgarası */
+            background-color: #030712;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                radial-gradient(circle at 50% 40%, rgba(6, 182, 212, 0.07), transparent 50%),
+                radial-gradient(circle at 50% 60%, rgba(79, 70, 229, 0.07), transparent 50%);
+            background-size: 30px 30px, 30px 30px, auto, auto;
+        }
+
+        .login-page-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 440px;
+            padding: 20px;
+        }
+
+        /* Üst Tanıtım Bölümü (Kutunun Dışında) */
+        .brand-intro-area {
+            text-align: center;
+            margin-bottom: 36px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .brand-name {
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: var(--brand-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-slogan {
+            font-size: 13px;
+            color: #06b6d4;
+            font-weight: 500;
+            margin-top: 8px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        /* Giriş Yapma Kutucuğu */
+        .login-wrapper {
+            width: 100%;
+            padding: 36px;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .login-meta-text {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dashboard Global Layout */
+        .dashboard-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styling */
+        .dashboard-sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            padding: 32px 24px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            margin-bottom: 40px;
+        }
+
+        .user-profile-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            margin-bottom: 32px;
+        }
+
+        .avatar-placeholder {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--brand-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: white;
+        }
+
+        .user-meta-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .user-meta-info span {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-main);
+        }
+
+        .menu-item.active {
+            background: var(--brand-gradient);
+            color: #ffffff;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+        }
+
+        /* Main Workspace Styling */
+        .main-workspace {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            background: radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.02), transparent 60%);
+        }
+
+        .workspace-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 36px;
+        }
+
+        .workspace-title h2 {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .workspace-title p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Layout Grids */
+        .dashboard-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 28px;
+            margin-bottom: 28px;
+        }
+
+        /* Component elements & Tables */
+        .section-heading {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Custom Progress Bars */
+        .progress-container {
+            margin-top: 16px;
+        }
+
+        .progress-label-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .progress-thumb {
+            height: 100%;
+            background: var(--brand-gradient);
+            border-radius: 99px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Modern Tables */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .premium-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .premium-table th {
+            padding: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--glass-border);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .premium-table td {
+            padding: 16px;
+            font-size: 14px;
+            color: var(--text-main);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        /* Badges */
+        .badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .badge-math { background: rgba(79, 70, 229, 0.12); color: #818cf8; border: 1px solid rgba(79, 70, 229, 0.2); }
+        .badge-code { background: rgba(6, 182, 212, 0.12); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.2); }
+        .badge-success { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+        .badge-pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+
+        .question-engine-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .question-card {
+            border-left: 4px solid #4f46e5;
+        }
+        
+        .question-card.coding-style {
+            border-left-color: #06b6d4;
+        }
+
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .question-text {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .question-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .feedback-zone {
+            margin-top: 16px;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+            font-weight: 500;
+        }
+
+        /* Toast Notifications */
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(9, 13, 22, 0.95);
+            border: 1px solid var(--glass-border);
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 9999;
+        }
+
+        .toast-notification.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Modal Simulation */
+        .premium-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(3, 7, 18, 0.9);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 500px;
+            background: #090d16;
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 32px;
+            position: relative;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid-2 { grid-template-columns: 1fr; }
+            .dashboard-container { flex-direction: column; }
+            .dashboard-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--glass-border); flex-direction: row; overflow-x: auto; padding: 16px; }
+            .sidebar-header, .user-profile-badge, .sidebar-footer { display: none; }
+            .sidebar-menu { flex-direction: row; }
+            .main-workspace { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. GİRİŞ EKRANI -->
+    <section id="login-view" class="app-view active">
+        <div class="login-page-container">
+            
+            <!-- Üst Tanıtım Bölümü (Kutucuğun Dışında) -->
+            <div class="brand-intro-area">
+                <h1 class="brand-name">Mehmath Coding</h1>
+                <div class="brand-slogan">Bir soru bir konu öğretir</div>
+            </div>
+
+            <!-- Giriş Yapma Kutucuğu -->
+            <div class="premium-card login-wrapper">
+                <p class="login-meta-text">Devam etmek için bilgilerinizi giriniz</p>
+                
+                <form id="lmsLoginForm" onsubmit="executeAppAuth(event)">
+                    <div class="form-group">
+                        <label for="authFullName">İsim Soyad</label>
+                        <input type="text" id="authFullName" placeholder="Örn: Mehmet Hoca veya Ali Yılmaz" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="authPassword">Şifre</label>
+                        <input type="password" id="authPassword" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-gradient" style="width: 100%; margin-top: 12px; height: 48px;">
+                        Giriş Yap
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 2. ÖĞRENCİ PANELİ -->
+    <section id="student-view" class="app-view dashboard-container">
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h2 class="brand-name" style="font-size: 22px;">Mehmath</h2>
+                <div class="brand-slogan" style="font-size: 10px; letter-spacing: 0.5px;">LMS Öğrenci</div>
+            </div>
+            <div class="user-profile-badge">
+                <div class="avatar-placeholder" id="studentAvatar">Ö</div>
+                <div class="user-meta-info">
+                    <h4 id="studentDisplayName">Öğrenci Hesabı</h4>
+                    <span>Aktif Öğrenci</span>
+                </div>
+            </div>
+            <nav class="sidebar-menu">
+                <a class="menu-item active" data-target="s-dashboard" onclick="navigateTab(this, 'student')">
+                    <span>Performans & Program</span>
+                </a>
+                <a class="menu-item" data-target="s-questions" onclick="navigateTab(this, 'student'); loadQuestionsEngine();">
+                    <span>Örnek Sorular</span>
+                </a>
+                <a class="menu-item" data-target="s-requests" onclick="navigateTab(this, 'student')">
+                    <span>Ders Talebi</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a class="menu-item" onclick="triggerLogout()" style="color: var(--danger);">
+                    <span>Oturumu Kapat</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-workspace">
+            <div class="workspace-header">
+                <div class="workspace-title">
+                    <h2 id="studentWelcomeTitle">Hoş Geldiniz</h2>
+                    <p>Öğrenim durumunuz ve kişiselleştirilmiş analiz paneli.</p>
+                </div>
+            </div>
+
+            <div id="s-dashboard" class="student-tab-content">
+                <div class="dashboard-grid-2">
+                    <div class="premium-card">
+                        <h3 class="section-heading">Performans Analizi</h3>
+                        <div class="progress-container">
+                            <div class="progress-label-row">
+                                <span>Doğru Cevap Oranı</span>
+                                <span style="color: var(--success);" id="studentSuccessRateText">%75</span>
+                            </div>
+                            <div class="progress-track">
+                                <div class="progress-thumb" id="studentSuccessRateBar" style="width: 75%;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 32px; display: flex; flex-direction: column; gap: 16px;">
+                            <div>
+                                <h4 style="font-size: 14px; font-weight: 500; color: var(--text-muted);">Yanlış Yapılan Konu Başlıkları</h4>
+                                <p style="font-size: 14px; font-weight: 600; margin-top: 4px; color: #fb7185;">Türev Kuralları, Algoritma Karmaşıklığı</p>
+                            </div>
+                            <div>
+                                <h4 style="font-size: 14px; font-weight: 500; color: var(--text-muted);">En Zayıf Alanlar</h4>
+                                <div style="display: flex; gap: 8px; margin-top: 8px;">
+                                    <span class="badge badge-math">Matematik: Olasılık</span>
+                                    <span class="badge badge-code">Kodlama: String İşlemleri</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="premium-card">
+                        <h3 class="section-heading">Kişisel Ders Programı</h3>
+                        <div class="table-responsive">
+                            <table class="premium-table">
+                                <thead>
+                                    <tr>
+                                        <th>Gün / Saat</th>
+                                        <th>Konu</th>
+                                        <th>Görev / Ödev</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="studentScheduleTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="s-questions" class="student-tab-content" style="display: none;">
+                <div class="question-engine-container" id="studentQuestionContainer"></div>
+            </div>
+
+            <div id="s-requests" class="student-tab-content" style="display: none;">
+                <div class="dashboard-grid-2">
+                    <div class="premium-card">
+                        <h3 class="section-heading">Yeni Ders Talebi</h3>
+                        <div class="form-group">
+                            <label>Ders Türü</label>
+                            <select id="reqCourseType">
+                                <option value="Matematik">Matematik</option>
+                                <option value="Kodlama">Kodlama</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Mesaj / Destek İstenen Alan</label>
+                            <textarea id="reqMessage" rows="5" placeholder="Hata yaptığınız konuyu veya detayları belirtiniz..."></textarea>
+                        </div>
+                        <button class="btn-gradient" onclick="submitLessonRequest()">Talep Gönder</button>
+                    </div>
+                    <div class="premium-card">
+                        <h3 class="section-heading">Gönderilen Talepler Listesi</h3>
+                        <div class="table-responsive">
+                            <table class="premium-table">
+                                <thead>
+                                    <tr>
+                                        <th>Ders</th>
+                                        <th>Açıklama</th>
+                                        <th>Durum</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="studentRequestsTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <!-- 3. ÖĞRETMEN PANELİ -->
+    <section id="teacher-view" class="app-view dashboard-container">
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h2 class="brand-name" style="font-size: 22px;">Mehmath</h2>
+                <div class="brand-slogan" style="font-size: 10px; letter-spacing: 0.5px;">Admin Panel</div>
+            </div>
+            <div class="user-profile-badge">
+                <div class="avatar-placeholder" style="background: linear-gradient(135deg, #06b6d4 0%, #4f46e5 100%);">M</div>
+                <div class="user-meta-info">
+                    <h4>Mehmet Hoca</h4>
+                    <span>Sistem Yöneticisi</span>
+                </div>
+            </div>
+            <nav class="sidebar-menu">
+                <a class="menu-item active" data-target="t-students" onclick="navigateTab(this, 'teacher'); refreshTeacherDashboard();">
+                    <span>Öğrenci Listesi & Analiz</span>
+                </a>
+                <a class="menu-item" data-target="t-requests" onclick="navigateTab(this, 'teacher'); loadTeacherRequests();">
+                    <span>Ders Talepleri Yönetimi</span>
+                </a>
+                <a class="menu-item" data-target="t-schedule" onclick="navigateTab(this, 'teacher')">
+                    <span>Ders Programı Oluşturma</span>
+                </a>
+                <a class="menu-item" data-target="t-system" onclick="navigateTab(this, 'teacher')">
+                    <span>PDF Raporu & Sistem</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a class="menu-item" onclick="triggerLogout()" style="color: var(--danger);">
+                    <span>Oturumu Kapat</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-workspace">
+            <div class="workspace-header">
+                <div class="workspace-title">
+                    <h2>Eğitmen Yönetim Paneli</h2>
+                    <p>Öğrenci metrikleri, akıllı analiz sistemleri ve talep motoru.</p>
+                </div>
+            </div>
+
+            <div id="t-students" class="teacher-tab-content">
+                <div class="premium-card">
+                    <h3 class="section-heading">Öğrenci Analiz Sistemi</h3>
+                    <div class="table-responsive">
+                        <table class="premium-table">
+                            <thead>
+                                <tr>
+                                    <th>İsim Soyad</th>
+                                    <th>Seviye</th>
+                                    <th>Ders Türü</th>
+                                    <th>Ort. Başarı Oranı</th>
+                                    <th>En Çok Hata Yapılan Konu</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminStudentListTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t-requests" class="teacher-tab-content" style="display: none;">
+                <div class="premium-card">
+                    <h3 class="section-heading">Gelen Ders Talepleri</h3>
+                    <div class="table-responsive">
+                        <table class="premium-table">
+                            <thead>
+                                <tr>
+                                    <th>Öğrenci</th>
+                                    <th>Ders Türü</th>
+                                    <th>Talep Notu</th>
+                                    <th>Aksiyonlar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminRequestsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t-schedule" class="teacher-tab-content" style="display: none;">
+                <div class="dashboard-grid-2">
+                    <div class="premium-card">
+                        <h3 class="section-heading">Öğrenciye Özel Program Planla</h3>
+                        <div class="form-group">
+                            <label>Öğrenci Seçin</label>
+                            <select id="schStudentSelect">
+                                <option value="Ali Yılmaz">Ali Yılmaz</option>
+                                <option value="Zeynep Kaya">Zeynep Kaya</option>
+                                <option value="Can Demir">Can Demir</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Gün ve Saat Planı</label>
+                            <input type="text" id="schDayTime" placeholder="Örn: Pazartesi 18:00">
+                        </div>
+                        <div class="form-group">
+                            <label>Planlanan Konu Başlığı</label>
+                            <input type="text" id="schSubject" placeholder="Örn: Olasılık Dağılımları">
+                        </div>
+                        <div class="form-group">
+                            <label>Yapılacak Ödev / Görev</label>
+                            <input type="text" id="schTask" placeholder="Örn: Modül 3 testleri bitirilecek">
+                        </div>
+                        <button class="btn-gradient" onclick="addScheduleFromAdmin()">Programı Ata ve Yayınla</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t-system" class="teacher-tab-content" style="display: none;">
+                <div class="dashboard-grid-2">
+                    <div class="premium-card" id="pdfReportContainer" style="background: #090d16;">
+                        <div style="border-bottom: 2px solid rgba(255,255,255,0.05); padding-bottom: 16px; margin-bottom: 20px;">
+                            <h2 style="color: #06b6d4; font-size: 20px;">MEHMATH CODING REPORT</h2>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Kurumsal Eğitim Performansı Özet Analiz Belgesi</p>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 12px; font-size: 14px;">
+                            <p><strong>Rapor Tarihi:</strong> <span id="reportDatePlaceholder"></span></p>
+                            <p><strong>Aktif Eğitim Dağılımı:</strong> %55 Matematik Analizi, %45 İleri Seviye Algoritma</p>
+                            <p><strong>Genel Başarı Ortalaması:</strong> %79.4</p>
+                            <p><strong>Kritik Hata Tespiti Yapılan Alanlar:</strong> Türev Denklem Yapıları, Fonksiyon Parametre Atamaları</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div class="premium-card">
+                            <h3 class="section-heading">Dışa Aktarma Araçları</h3>
+                            <button class="btn-gradient" onclick="exportToPDF()">PDF Raporu Oluştur</button>
+                        </div>
+                        <div class="premium-card">
+                            <h3 class="section-heading">E-Posta Dağıtım Entegrasyonu (Simüle)</h3>
+                            <button class="btn-outline" onclick="triggerSimulatedEmail()">Hocaya / Öğrencilere Gönder</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <div id="appToast" class="toast-notification">
+        <span id="toastMessage">İşlem Başarılı</span>
+    </div>
+
+    <div id="emailModal" class="premium-modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 12px; color: #06b6d4;">E-Posta Motoru Çalıştırıldı</h3>
+            <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px;">
+                Sistemdeki tüm öğrenci kayıtları, başarı oranları ve bireysel ödev metrikleri otomatik olarak derlenerek e-posta olarak simüle edilmiştir. (API Placeholder 200 OK)
+            </p>
+            <button class="btn-gradient" onclick="closeEmailModal()" style="width: 100%;">Kapat</button>
+        </div>
+    </div>
+
+    <script>
+        const initialQuestionsDb = [
+            { id: 1, category: "Matematik", question: "f(x) = 3x² - 5x + 12 fonksiyonunun x=2 noktasındaki anlık değişim oranı (türevi) kaçtır?", answer: "7" },
+            { id: 2, category: "Kodlama", question: "Python dilinde bir string ifadesinin tüm karakterlerini büyük harfe çeviren metodun adı nedir? (Parantezleri eklemeyiniz)", answer: "upper" },
+            { id: 3, category: "Matematik", question: "Bir zar ard arda iki kez havaya atılıyor. Üst yüze gelen sayıların toplamının 11 olma olasılığı nedir? (Kesir olarak örn: 1/18)", answer: "1/18" },
+            { id: 4, category: "Kodlama", question: "Verilen bir dizideki elemanları sıralamak için kullanılan ve en kötü senaryoda O(n log n) zaman karmaşıklığı sunan algoritmalardan biri hangisidir? (Örn: Merge Sort)", answer: "merge sort" }
+        ];
+
+        const initialStudentsData = [
+            { name: "Ali Yılmaz", level: "Lise 4", track: "Matematik", success: 75, badTopic: "Türev Kuralları" },
+            { name: "Zeynep Kaya", level: "Üniversite", track: "Kodlama", success: 88, badTopic: "Matris Operasyonları" },
+            { name: "Can Demir", level: "Lise 3", track: "Matematik & Kodlama", success: 62, badTopic: "String İşlemleri" }
+        ];
+
+        let appRequests = JSON.parse(localStorage.getItem('mehmath_reqs')) || [
+            { id: 1, student: "Ali Yılmaz", type: "Matematik", msg: "Türev zincir kuralı konusunu tam oturtamadım, soru çözümü yapabilir miyiz?", status: "Onaylandı" }
+        ];
+
+        let appSchedule = JSON.parse(localStorage.getItem('mehmath_schedule')) || [
+            { id: 1, student: "Ali Yılmaz", dayTime: "Pazartesi 18:00", subject: "Türev Uygulamaları ve Geometrik Yorum", task: "Sayfa 45-60 arası çözülecek" },
+            { id: 2, student: "Zeynep Kaya", dayTime: "Çarşamba 20:00", subject: "Python ile API Entegrasyonu Tasarımı", task: "Mock endpoints tamamlanacak" }
+        ];
+
+        let answeredTracker = JSON.parse(localStorage.getItem('mehmath_answers')) || { correct: 3, total: 4 };
+
+        document.getElementById('reportDatePlaceholder').innerText = new Date().toLocaleDateString('tr-TR');
+
+        function showNotification(msg) {
+            const toast = document.getElementById('appToast');
+            document.getElementById('toastMessage').innerText = msg;
+            toast.classList.add('active');
+            setTimeout(() => { toast.classList.remove('active'); }, 3500);
+        }
+
+        function executeAppAuth(event) {
+            event.preventDefault();
+            const fullName = document.getElementById('authFullName').value.trim();
+            if (fullName.toLowerCase().includes('mehmet')) {
+                document.getElementById('login-view').classList.remove('active');
+                document.getElementById('teacher-view').classList.add('active');
+                refreshTeacherDashboard();
+                showNotification("Hoş geldiniz Mehmet Hoca.");
+            } else {
+                document.getElementById('login-view').classList.remove('active');
+                document.getElementById('student-view').classList.add('active');
+                localStorage.setItem('mehmath_current_user', fullName);
+                document.getElementById('studentDisplayName').innerText = fullName;
+                document.getElementById('studentAvatar').innerText = fullName.charAt(0).toUpperCase();
+                document.getElementById('studentWelcomeTitle').innerText = `Hoş Geldin, ${fullName}`;
+                renderStudentSchedule();
+                renderStudentRequests();
+                updateStudentPerformanceMetrics();
+                showNotification(`LMS paneli hazır.`);
+            }
+        }
+
+        function triggerLogout() {
+            document.getElementById('student-view').classList.remove('active');
+            document.getElementById('teacher-view').classList.remove('active');
+            document.getElementById('login-view').classList.add('active');
+            document.getElementById('lmsLoginForm').reset();
+        }
+
+        function navigateTab(element, currentRole) {
+            const parent = element.parentElement;
+            parent.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+            const targetId = element.getAttribute('data-target');
+            document.querySelectorAll(`.${currentRole}-tab-content`).forEach(tab => tab.style.display = 'none');
+            document.getElementById(targetId).style.display = 'block';
+        }
+
+        function renderStudentSchedule() {
+            const currentUser = localStorage.getItem('mehmath_current_user') || "Ali Yılmaz";
+            const tbody = document.getElementById('studentScheduleTable');
+            tbody.innerHTML = '';
+            const filtered = appSchedule.filter(s => s.student.toLowerCase() === currentUser.toLowerCase() || currentUser === "Ali Yılmaz");
+            filtered.forEach(item => {
+                tbody.innerHTML += `<tr><td style="font-weight: 600;">${item.dayTime}</td><td>${item.subject}</td><td><span style="color: var(--text-muted);">${item.task}</span></td></tr>`;
+            });
+        }
+
+        function renderStudentRequests() {
+            const tbody = document.getElementById('studentRequestsTable');
+            tbody.innerHTML = '';
+            appRequests.forEach(req => {
+                tbody.innerHTML += `<tr><td><span class="badge ${req.type === 'Matematik' ? 'badge-math' : 'badge-code'}">${req.type}</span></td><td>${req.msg}</td><td><span class="badge ${req.status === 'Onaylandı' ? 'badge-success' : 'badge-pending'}">${req.status}</span></td></tr>`;
+            });
+        }
+
+        function updateStudentPerformanceMetrics() {
+            const rate = Math.round((answeredTracker.correct / answeredTracker.total) * 100) || 75;
+            document.getElementById('studentSuccessRateText').innerText = `%${rate}`;
+            document.getElementById('studentSuccessRateBar').style.width = `${rate}%`;
+        }
+
+        function submitLessonRequest() {
+            const type = document.getElementById('reqCourseType').value;
+            const msg = document.getElementById('reqMessage').value.trim();
+            const currentUser = localStorage.getItem('mehmath_current_user') || "Öğrenci";
+            if(!msg) return;
+            appRequests.push({ id: appRequests.length + 1, student: currentUser, type: type, msg: msg, status: "Beklemede" });
+            localStorage.setItem('mehmath_reqs', JSON.stringify(appRequests));
+            renderStudentRequests();
+            document.getElementById('reqMessage').value = '';
+            showNotification("Talep iletildi.");
+        }
+
+        function loadQuestionsEngine() {
+            const container = document.getElementById('studentQuestionContainer');
+            container.innerHTML = `<h3 class="section-heading">Örnek Soru Havuzu</h3>`;
+            initialQuestionsDb.forEach(q => {
+                container.innerHTML += `
+                    <div class="premium-card question-card ${q.category === 'Kodlama' ? 'coding-style' : ''}">
+                        <div class="question-meta"><span class="badge ${q.category === 'Kodlama' ? 'badge-code' : 'badge-math'}">${q.category}</span></div>
+                        <div class="question-text">${q.question}</div>
+                        <input type="text" id="qAnsInput-${q.id}" placeholder="Cevabınız..." style="margin-bottom:12px;">
+                        <div class="question-actions">
+                            <button class="btn-gradient" onclick="evaluateAnswer(${q.id}, '${q.answer}')">Kontrol Et</button>
+                            <button class="btn-outline" onclick="revealAnswerZone(${q.id}, '${q.answer}')">Cevabı Göster</button>
+                        </div>
+                        <div class="feedback-zone" id="feedback-${q.id}"></div>
+                    </div>`;
+            });
+        }
+
+        function evaluateAnswer(id, correctAns) {
+            const userAns = document.getElementById(`qAnsInput-${id}`).value.trim().toLowerCase();
+            const feedback = document.getElementById(`feedback-${id}`);
+            feedback.style.display = 'block';
+            if(userAns === correctAns.toLowerCase()) {
+                feedback.style.background = "rgba(16, 185, 129, 0.1)"; feedback.style.color = "var(--success)";
+                feedback.innerHTML = "Doğru!";
+            } else {
+                feedback.style.background = "rgba(239, 68, 68, 0.1)"; feedback.style.color = "var(--danger)";
+                feedback.innerHTML = "Hatalı.";
+            }
+        }
+
+        function revealAnswerZone(id, correctAns) {
+            const feedback = document.getElementById(`feedback-${id}`);
+            feedback.style.display = 'block'; feedback.innerHTML = `Doğru Cevap: ${correctAns}`;
+        }
+
+        function refreshTeacherDashboard() {
+            const tbody = document.getElementById('adminStudentListTable');
+            tbody.innerHTML = '';
+            initialStudentsData.forEach(student => {
+                tbody.innerHTML += `<tr><td style="font-weight:600;">${student.name}</td><td>${student.level}</td><td>${student.track}</td><td style="color:var(--success); font-weight:600;">%${student.success}</td><td style="color:#fb7185;">${student.badTopic}</td></tr>`;
+            });
+        }
+
+        function loadTeacherRequests() {
+            const tbody = document.getElementById('adminRequestsTable');
+            tbody.innerHTML = '';
+            appRequests.forEach((req, idx) => {
+                tbody.innerHTML += `<tr><td>${req.student}</td><td>${req.type}</td><td>${req.msg}</td><td><span class="badge">${req.status}</span></td></tr>`;
+            });
+        }
+
+        function addScheduleFromAdmin() {
+            const student = document.getElementById('schStudentSelect').value;
+            const dayTime = document.getElementById('schDayTime').value.trim();
+            const subject = document.getElementById('schSubject').value.trim();
+            const task = document.getElementById('schTask').value.trim();
+            if(!dayTime || !subject || !task) return;
+            appSchedule.push({ id: appSchedule.length + 1, student: student, dayTime: dayTime, subject: subject, task: task });
+            localStorage.setItem('mehmath_schedule', JSON.stringify(appSchedule));
+            showNotification("Program atandı.");
+        }
+
+        function exportToPDF() {
+            const element = document.getElementById('pdfReportContainer');
+            html2pdf().from(element).save();
+        }
+
+        function triggerSimulatedEmail() { document.getElementById('emailModal').style.display = 'flex'; }
+        function closeEmailModal() { document.getElementById('emailModal').style.display = 'none'; }
+    </script>
+</body>
+</html>
